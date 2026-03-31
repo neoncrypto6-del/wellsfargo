@@ -4,10 +4,10 @@ import { supabase, CRYPTO_WALLETS } from '../lib/supabase'
 import { DashboardLayout } from '../components/DashboardLayout'
 import { XIcon, CopyIcon, CheckIcon, UploadIcon } from 'lucide-react'
 
-/* ✅ ONLY ADDITION */
+/* ✅ FIXED QR MAP (matches your EXACT filenames) */
 const QR_MAP: Record<string, string> = {
-  'Bitcoin (BTC)': 'public/qrcode/bitcoin.JPG',
-  'Ethereum (ETH)': 'public/qrcode/ethereun.JPG',
+  'Bitcoin (BTC)': '/qrcode/bitcoin.JPG',
+  'Ethereum (ETH)': '/qrcode/ethereun.JPG',
   'Solana (SOL)': '/qrcode/solana.JPG',
   'BNB Smart Chain': '/qrcode/bnd.JPG',
   'USDT (ERC20)': '/qrcode/usdt.JPG',
@@ -110,7 +110,11 @@ export function DepositCryptoPage() {
                 setSelectedCrypto(key)
                 setSuccess(false)
               }}
-              className={`p-3 rounded-lg border text-sm font-medium transition-all ${selectedCrypto === key ? 'border-[#D71E28] bg-red-50 text-[#D71E28]' : 'border-gray-200 bg-white text-[#2D2D2D] hover:border-gray-300'}`}
+              className={`p-3 rounded-lg border text-sm font-medium transition-all ${
+                selectedCrypto === key
+                  ? 'border-[#D71E28] bg-red-50 text-[#D71E28]'
+                  : 'border-gray-200 bg-white text-[#2D2D2D] hover:border-gray-300'
+              }`}
             >
               {info.name}
             </button>
@@ -160,7 +164,7 @@ export function DepositCryptoPage() {
                 </div>
               </div>
 
-              {/* ✅ ONLY FIXED PART */}
+              {/* ✅ QR CODE (FIXED) */}
               <div className="flex justify-center mb-4">
                 <div className="w-40 h-40 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center">
                   <img
@@ -170,7 +174,7 @@ export function DepositCryptoPage() {
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = 'none'
-                      target.parentElement!.innerHTML = `<span class="text-xs text-gray-400 text-center px-4">QR Code for ${selectedCrypto}</span>`
+                      target.parentElement!.innerHTML = `<span class="text-xs text-gray-400 text-center px-4">QR Code not found</span>`
                     }}
                   />
                 </div>
