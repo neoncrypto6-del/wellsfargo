@@ -6,8 +6,8 @@ import { XIcon, CopyIcon, CheckIcon, UploadIcon } from 'lucide-react'
 
 /* ✅ ONLY ADDITION */
 const QR_MAP: Record<string, string> = {
-  'Bitcoin (BTC)': '/qrcode/bitcoin.JPG',
-  'Ethereum (ETH)': '/qrcode/ethereun.JPG',
+  'Bitcoin (BTC)': 'public/qrcode/bitcoin.JPG',
+  'Ethereum (ETH)': 'public/qrcode/ethereun.JPG',
   'Solana (SOL)': '/qrcode/solana.JPG',
   'BNB Smart Chain': '/qrcode/bnd.JPG',
   'USDT (ERC20)': '/qrcode/usdt.JPG',
