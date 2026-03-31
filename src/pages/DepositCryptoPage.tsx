@@ -6,16 +6,16 @@ import { XIcon, CopyIcon, CheckIcon, UploadIcon } from 'lucide-react'
 
 /* ✅ QR MAP - Make sure filenames match EXACTLY (case-sensitive) */
 const QR_MAP: Record<string, string> = {
-  'Bitcoin (BTC)': '/qrcode/bitcoin.JPG',
-  'Ethereum (ETH)': '/qrcode/ethereun.JPG',
-  'Solana (SOL)': '/qrcode/solana.JPG',
-  'BNB Smart Chain': '/qrcode/bnd.JPG',
-  'USDT (ERC20)': '/qrcode/usdt.JPG',
-  'USDC (ERC20)': '/qrcode/usdc.JPG',
-  'Dogecoin (DOGE)': '/qrcode/dogecoin.JPG',
-  'Tron (TRX)': '/qrcode/tron.JPG',
-  XRP: '/qrcode/xrp.JPG',
-  'Litecoin (LTC)': '/qrcode/litecoin.JPG',
+  'Bitcoin (BTC)': '/qrcode/bitcoin.jpg',
+  'Ethereum (ETH)': '/qrcode/ethereun.jpg',
+  'Solana (SOL)': '/qrcode/solana.jpg',
+  'BNB Smart Chain': '/qrcode/bnd.jpg',
+  'USDT (ERC20)': '/qrcode/usdt.jpg',
+  'USDC (ERC20)': '/qrcode/usdc.jpg',
+  'Dogecoin (DOGE)': '/qrcode/dogecoin.jpg',
+  'Tron (TRX)': '/qrcode/tron.jpg',
+  XRP: '/qrcode/xrp.jpg',
+  'Litecoin (LTC)': '/qrcode/litecoin.jpg',
 }
 
 export function DepositCryptoPage() {
