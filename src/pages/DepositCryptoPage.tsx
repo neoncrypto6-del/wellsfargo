@@ -54,8 +54,7 @@ export function DepositCryptoPage() {
       .upload(path, file)
 
     if (!uploadError) {
-      proofUrl = supabase.storage.from('uploads').getPublicUrl(path)
-        .data.publicUrl
+      proofUrl = supabase.storage.from('uploads').getPublicUrl(path).data.publicUrl
     }
 
     const { error: insertError } = await supabase
@@ -164,17 +163,26 @@ export function DepositCryptoPage() {
                 </div>
               </div>
 
-              {/* ✅ QR CODE (FIXED) */}
-              <div className="flex justify-center mb-4">
-                <div className="w-40 h-40 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center">
+              {/* ✅ FIXED QR CODE SECTION */}
+              <div className="flex justify-center mb-6">
+                <div className="w-48 h-48 bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center border border-gray-100 shadow-sm">
                   <img
+                    key={QR_MAP[selectedCrypto]} // forces re-render if crypto changes
                     src={QR_MAP[selectedCrypto]}
-                    alt={`QR Code for ${selectedCrypto}`}
-                    className="w-full h-full object-contain"
+                    alt={`QR Code for depositing ${selectedCrypto}`}
+                    className="w-full h-full object-contain p-2"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
                       target.style.display = 'none'
-                      target.parentElement!.innerHTML = `<span class="text-xs text-gray-400 text-center px-4">QR Code not found</span>`
+                      // Safe fallback
+                      if (target.parentElement) {
+                        target.parentElement.innerHTML = `
+                          <div class="flex flex-col items-center justify-center h-full text-center px-4">
+                            <span class="text-2xl mb-1">📸</span>
+                            <span class="text-xs text-gray-400">QR Code not available</span>
+                          </div>
+                        `
+                      }
                     }}
                   />
                 </div>
