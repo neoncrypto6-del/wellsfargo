@@ -4,10 +4,10 @@ import { supabase, CRYPTO_WALLETS } from '../lib/supabase'
 import { DashboardLayout } from '../components/DashboardLayout'
 import { XIcon, CopyIcon, CheckIcon, UploadIcon } from 'lucide-react'
 
-/* ✅ FIXED QR MAP (matches your EXACT filenames) */
+/* ✅ QR MAP - Double-check these paths and filenames exactly */
 const QR_MAP: Record<string, string> = {
   'Bitcoin (BTC)': '/qrcode/bitcoin.JPG',
-  'Ethereum (ETH)': '/qrcode/ethereun.JPG',
+  'Ethereum (ETH)': '/qrcode/ethereun.JPG',     // ← note spelling "ethereun"
   'Solana (SOL)': '/qrcode/solana.JPG',
   'BNB Smart Chain': '/qrcode/bnd.JPG',
   'USDT (ERC20)': '/qrcode/usdt.JPG',
@@ -27,6 +27,7 @@ export function DepositCryptoPage() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
+  const [qrError, setQrError] = useState(false)
 
   const cryptoList = Object.entries(CRYPTO_WALLETS)
 
@@ -35,6 +36,13 @@ export function DepositCryptoPage() {
     navigator.clipboard.writeText(CRYPTO_WALLETS[selectedCrypto].wallet)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  // Reset QR error when changing crypto
+  const handleCryptoSelect = (key: string) => {
+    setSelectedCrypto(key)
+    setQrError(false)
+    setSuccess(false)
   }
 
   async function handleSubmit() {
@@ -90,6 +98,7 @@ export function DepositCryptoPage() {
     setSelectedCrypto(null)
     setAmount('')
     setFile(null)
+    setQrError(false)
   }
 
   return (
@@ -105,10 +114,7 @@ export function DepositCryptoPage() {
           {cryptoList.map(([key, info]) => (
             <button
               key={key}
-              onClick={() => {
-                setSelectedCrypto(key)
-                setSuccess(false)
-              }}
+              onClick={() => handleCryptoSelect(key)}
               className={`p-3 rounded-lg border text-sm font-medium transition-all ${
                 selectedCrypto === key
                   ? 'border-[#D71E28] bg-red-50 text-[#D71E28]'
@@ -142,7 +148,7 @@ export function DepositCryptoPage() {
               </div>
 
               {/* Wallet Address */}
-              <div className="mb-4">
+              <div className="mb-6">
                 <label className="block text-sm font-medium text-[#2D2D2D] mb-1">
                   Wallet Address
                 </label>
@@ -163,29 +169,37 @@ export function DepositCryptoPage() {
                 </div>
               </div>
 
-              {/* ✅ FIXED QR CODE SECTION */}
-              <div className="flex justify-center mb-6">
-                <div className="w-48 h-48 bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center border border-gray-100 shadow-sm">
-                  <img
-                    key={QR_MAP[selectedCrypto]} // forces re-render if crypto changes
-                    src={QR_MAP[selectedCrypto]}
-                    alt={`QR Code for depositing ${selectedCrypto}`}
-                    className="w-full h-full object-contain p-2"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.style.display = 'none'
-                      // Safe fallback
-                      if (target.parentElement) {
-                        target.parentElement.innerHTML = `
-                          <div class="flex flex-col items-center justify-center h-full text-center px-4">
-                            <span class="text-2xl mb-1">📸</span>
-                            <span class="text-xs text-gray-400">QR Code not available</span>
-                          </div>
-                        `
-                      }
-                    }}
-                  />
+              {/* IMPROVED QR CODE SECTION */}
+              <div className="flex flex-col items-center mb-6">
+                <p className="text-sm font-medium text-[#2D2D2D] mb-3">
+                  Scan QR Code to Pay
+                </p>
+                <div className="w-52 h-52 bg-white border border-gray-200 rounded-2xl overflow-hidden flex items-center justify-center shadow-sm relative">
+                  {!qrError ? (
+                    <img
+                      key={`qr-${selectedCrypto}-${Date.now()}`} // force fresh load
+                      src={QR_MAP[selectedCrypto]}
+                      alt={`QR Code for ${selectedCrypto}`}
+                      className="w-full h-full object-contain p-3"
+                      onLoad={() => console.log(`✅ QR loaded for ${selectedCrypto}`)}
+                      onError={(e) => {
+                        console.error(`❌ Failed to load QR for ${selectedCrypto}:`, QR_MAP[selectedCrypto])
+                        setQrError(true)
+                        const target = e.target as HTMLImageElement
+                        target.style.display = 'none'
+                      }}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-center p-6 text-gray-400">
+                      <span className="text-4xl mb-2">📸</span>
+                      <p className="text-sm">QR Code not found</p>
+                      <p className="text-xs mt-1">Check file path and filename</p>
+                    </div>
+                  )}
                 </div>
+                <p className="text-[10px] text-gray-400 mt-2">
+                  {QR_MAP[selectedCrypto]}
+                </p>
               </div>
 
               {error && (
